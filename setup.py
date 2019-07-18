@@ -28,7 +28,7 @@ setup(
         'munch',
         'pytest',
         'pytest-reportportal==1.0.5',
-        'pytest-logger',
+        'pytest-logger @ git+https://github.com/zmc/pytest-logger.git@logsdir-hook',
         'DeepDiff',
         'dataclasses',  # For compatibility with python 3.6
         'pytest-html',
