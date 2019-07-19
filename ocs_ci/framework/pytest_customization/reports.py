@@ -36,9 +36,15 @@ def pytest_runtest_makereport(item, call):
     extra = getattr(report, 'extra', [])
 
     if report.when == 'call':
-        log_file = logging.getLogger().handlers[1].baseFilename
-        extra.append(pytest_html.extras.url(log_file, name='Log File'))
-        report.extra = extra
+        handlers = logging.getLogger().handlers
+        if handlers:
+            log_file = handlers[1].baseFilename
+            extra.append(pytest_html.extras.url(log_file, name='Log File'))
+            report.extra = extra
+        else:
+            logging.warn("pytest_runtest_makereport: Logger had no handlers!")
+            logging.warn("item.function.__name__: {item.function.__name__}")
+            logging.warn("item.name: {item.name}")
 
 
 def pytest_sessionfinish(session, exitstatus):
