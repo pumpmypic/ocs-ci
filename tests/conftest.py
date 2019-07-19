@@ -54,7 +54,7 @@ log_path = os.path.expanduser(
 )
 
 
-def pytest_logger_logsdir():
+def pytest_logger_logdirlink():
     return log_path
 
 
