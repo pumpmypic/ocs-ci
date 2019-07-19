@@ -54,10 +54,6 @@ log_path = os.path.expanduser(
 )
 
 
-def pytest_logger_logdirlink():
-    return log_path
-
-
 @pytest.fixture(scope="session", autouse=True)
 def polarion_testsuite_properties(record_testsuite_property):
     """
