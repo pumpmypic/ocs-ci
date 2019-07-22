@@ -44,8 +44,8 @@ def pytest_runtest_makereport(item, call):
             report.extra = extra
         else:
             logging.warn("pytest_runtest_makereport: Logger had less than 2 handlers!")
-            logging.warn("item.function.__name__: {item.function.__name__}")
-            logging.warn("item.name: {item.name}")
+            logging.warn(f"item.function.__name__: {item.function.__name__}")
+            logging.warn(f"item.name: {item.name}")
 
 
 def pytest_sessionfinish(session, exitstatus):
