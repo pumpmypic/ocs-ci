@@ -37,12 +37,13 @@ def pytest_runtest_makereport(item, call):
 
     if report.when == 'call':
         handlers = logging.getLogger().handlers
-        if handlers:
+        logging.info(str(handlers))
+        if len(handlers) > 1:
             log_file = handlers[1].baseFilename
             extra.append(pytest_html.extras.url(log_file, name='Log File'))
             report.extra = extra
         else:
-            logging.warn("pytest_runtest_makereport: Logger had no handlers!")
+            logging.warn("pytest_runtest_makereport: Logger had less than 2 handlers!")
             logging.warn("item.function.__name__: {item.function.__name__}")
             logging.warn("item.name: {item.name}")
 
