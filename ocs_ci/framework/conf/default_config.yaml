@@ -96,9 +96,12 @@ ENV_DATA:
   master_replicas: 3
   worker_replicas: 3
   skip_ocp_deployment: false
-  skip_ocs_deployment: false
+  skip_ocs_deployment: true
   logging_version: '4.3'
   ocs_version: '4.3'
+  worker_num_cpus: 20
+  master_num_cpus: 8
+
   # uncomment to use custom directory for storing measurement data related to
   # monitoring tests, otherwise generate temporary directory for each test run
   # measurement_dir: '/tmp/ocs_ci_monitoring_measurement/'
