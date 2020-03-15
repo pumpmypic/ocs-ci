@@ -97,6 +97,8 @@ ENV_DATA:
   worker_replicas: 3
   skip_ocp_deployment: false
   skip_ocs_deployment: false
+  worker_num_cpus: 16
+  master_num_cpus: 8
   logging_version: '4.3'
   ocs_version: '4.3'
   # uncomment to use custom directory for storing measurement data related to
