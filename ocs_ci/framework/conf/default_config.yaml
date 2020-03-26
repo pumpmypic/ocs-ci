@@ -87,10 +87,10 @@ ENV_DATA:
   cluster_namespace: 'openshift-storage'
   monitoring_enabled: true
   persistent-monitoring: true
-  platform: 'AWS'
-  deployment_type: 'ipi'
-  region: 'us-east-2'
-  base_domain: 'qe.rh-ocs.com'
+#  platform: 'AWS'
+#  deployment_type: 'ipi'
+#  region: 'us-east-2'
+#  base_domain: 'qe.rh-ocs.com'
   master_instance_type: 'm4.xlarge'
   worker_instance_type: 'm4.xlarge'
   master_replicas: 3
