@@ -7,7 +7,7 @@ from ocs_ci.utility.utils import (
     get_latest_ocp_version,
     expose_ocp_version,
 )
-from ocs_ci.framework.testlib import ManageTest
+from ocs_ci.framework.testlib import ManageTest, ocp_upgrade
 from ocs_ci.ocs.cluster import CephCluster, CephHealthMonitor
 
 logger = logging.getLogger(__name__)
@@ -16,6 +16,7 @@ logger = logging.getLogger(__name__)
 # TODO: add image type validation (ga to ga , nightly to nightly, newer than current etc.)
 
 
+@ocp_upgrade
 class TestUpgradeOCP(ManageTest):
     """
     1. check cluster health
@@ -63,7 +64,8 @@ class TestUpgradeOCP(ManageTest):
                     timeout=2700,
                     sleep=60,
                     func=ocp.confirm_cluster_operator_version,
-                    target_version=target_image
+                    target_version=target_image,
+                    cluster_operator=ocp_operator
                 ):
                     logger.info(
                         f"ClusterOperator upgrade "

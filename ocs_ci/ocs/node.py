@@ -3,15 +3,17 @@ import logging
 import re
 
 from subprocess import TimeoutExpired
+
+from ocs_ci.ocs.machine import get_machine_objs
+
 from ocs_ci.framework import config
 from ocs_ci.ocs.exceptions import TimeoutExpiredError
 from ocs_ci.ocs.ocp import OCP
 from ocs_ci.ocs.resources.ocs import OCS
-from ocs_ci.ocs import constants, exceptions
+from ocs_ci.ocs import constants, exceptions, ocp
 from ocs_ci.utility.utils import TimeoutSampler
 from ocs_ci.ocs import machine
 import tests.helpers
-from ocs_ci.ocs import ocp
 from ocs_ci.ocs.resources import pod
 
 
@@ -153,10 +155,19 @@ def drain_nodes(node_names):
     ocp = OCP(kind='node')
     node_names_str = ' '.join(node_names)
     log.info(f'Draining nodes {node_names_str}')
-    ocp.exec_oc_cmd(
-        f"adm drain {node_names_str} --force=true --ignore-daemonsets "
-        f"--delete-local-data", timeout=1200
-    )
+    try:
+        ocp.exec_oc_cmd(
+            f"adm drain {node_names_str} --force=true --ignore-daemonsets "
+            f"--delete-local-data", timeout=1200
+        )
+    except TimeoutExpired:
+        ct_pod = pod.get_ceph_tools_pod()
+        ceph_status = ct_pod.exec_cmd_on_pod("ceph status", out_yaml_format=False)
+        log.error(
+            f"Drain command failed to complete. Ceph status: {ceph_status}"
+        )
+        # TODO: Add re-balance status once pull/1679 is merged
+        raise
 
 
 def get_typed_worker_nodes(os_id="rhcos"):
@@ -270,6 +281,7 @@ def add_new_node_and_label_it(machineset_name):
     log.info(
         f"Successfully labeled {new_spun_node} with OCS storage label"
     )
+    return new_spun_node[0]
 
 
 def get_node_logs(node_name):
@@ -440,3 +452,20 @@ def get_both_osd_and_app_pod_running_node(
     common_nodes = list(set(osd_running_nodes) & set(app_pod_running_nodes))
     log.info(f"Common node is {common_nodes}")
     return common_nodes
+
+
+def get_node_from_machine_name(machine_name):
+    """
+    Get node name from a given machine_name
+
+    machine_name (str): Name of Machine
+
+    Returns:
+        str: Name of node
+    """
+    machine_objs = get_machine_objs()
+    for machine_obj in machine_objs:
+        if machine_obj.name == machine_name:
+            return machine_obj.get().get(
+                'status'
+            ).get('addresses')[1].get('address')
