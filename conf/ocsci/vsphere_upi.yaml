@@ -4,4 +4,7 @@ ENV_DATA:
   deployment_type: 'upi'
   worker_replicas: 3
   master_replicas: 3
-  fio_storageutilization_min_mbps: 10.0
+#  fio_storageutilization_min_mbps: 10.0
+  worker_num_cpus: '16'
+  master_num_cpus: '4'
+  device_size: 100
