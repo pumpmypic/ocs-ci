@@ -1,7 +1,7 @@
 ---
 # This config is suppose to work only on DCs with enough memory.
 DEPLOYMENT:
-  allow_lower_instance_requirements: false
+  allow_lower_instance_requirements: true
 ENV_DATA:
   platform: 'vsphere'
   deployment_type: 'upi'
@@ -11,6 +11,6 @@ ENV_DATA:
   master_num_cpus: '4'
   master_memory: '16384'
   compute_memory: '65536'
-  fio_storageutilization_min_mbps: 10.0
+#  fio_storageutilization_min_mbps: 10.0
   device_size: 100
   
