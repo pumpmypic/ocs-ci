@@ -383,6 +383,41 @@ validation_4_8 = {
         By.CSS_SELECTOR,
     ),
 }
+storageclass1 = {
+    "create_storageclass1": (
+        'button[data-test="item-create"]',
+        By.CSS_SELECTOR,
+    ),
+    "storageclass_name1": (
+        'input[id="storage-class-name"]', By.CSS_SELECTOR,
+    ),
+    "storageclass_provisioner_dropdown1": (
+        'button[data-test="storage-class-provisioner-dropdown"]',
+        By.CSS_SELECTOR,
+    ),
+    "rbd_provisioner1": (
+        'a[id="openshift-storage.rbd.csi.ceph.com-link"]',
+        By.CSS_SELECTOR,
+    ),
+    "select_pool_dropdown1": (
+        'button[data-test="pool-dropdown-toggle"]',
+        By.CSS_SELECTOR,
+    ),
+    "pool_ocs_storagecluster_cephblockpool1": (
+        'button[data-test="ocs-storagecluster-cephblockpool"]',
+        By.CSS_SELECTOR,
+    ),
+    "save_storageclass1": (
+        'button[id="save-changes"]',
+        By.CSS_SELECTOR,
+    ),
+    "storage_class_heading_name": (
+        'span[data-test-id="resource-title"]',
+        By.CSS_SELECTOR,
+    ),
+}
+
+
 
 locators = {
     "4.8": {
@@ -397,6 +432,7 @@ locators = {
         "pvc": {**pvc, **pvc_4_7, **pvc_4_8},
         "infra": infra,
         "validation": {**validation, **validation_4_8},
+        "storageclass1": storageclass1,
     },
     "4.7": {
         "login": login,
