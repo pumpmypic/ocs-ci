@@ -40,7 +40,7 @@ logger = logging.getLogger(__name__)
 )
 class TestLvmSnapshot(ManageTest):
     """
-    Test snapshot for LVM
+    Test snapshot for LVMO
 
     """
 
