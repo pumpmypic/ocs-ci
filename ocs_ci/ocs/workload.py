@@ -82,6 +82,9 @@ class WorkLoad(object):
         conf["path"] = self.path
         conf["type"] = self.storage_type
         conf["numjobs"] = self.jobs
-        future_obj = self.thread_exec.submit(self.work_load_mod.run, **conf)
+        executor = concurrent.futures.ThreadPoolExecutor(max_workers=1)
+        future_obj = self.thread_exec.submit(
+            lambda: executor.submit(self.work_load_mod.run, **conf).result(timeout=1200)
+        )
         log.info("Done submitting..")
         return future_obj

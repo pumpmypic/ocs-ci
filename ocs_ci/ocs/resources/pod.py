@@ -146,6 +146,7 @@ class Pod(OCS):
         except CommandFailed as ex:
             logger.exception(f"FIO failed: {ex}")
             raise
+
         except Exception as ex:
             logger.exception(f"Found Exception: {ex}")
             raise

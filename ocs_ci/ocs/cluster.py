@@ -34,6 +34,7 @@ import ocs_ci.ocs.constants as constant
 from ocs_ci.ocs import defaults
 from ocs_ci.ocs.resources.mcg import MCG
 from ocs_ci.utility import version
+from ocs_ci.utility.prometheus import PrometheusAPI
 from ocs_ci.utility.retry import retry
 from ocs_ci.utility.utils import (
     TimeoutSampler,
@@ -2636,6 +2637,77 @@ class LVM(object):
         return_output = node_ssh.exec_cmd(cmd=cmd)
         return_stdout = return_output[1]
         return return_stdout
+
+    def get_thin_provisioning_alerts(self):
+        """
+        Get the list of alerts that active in the cluster
+
+        Returns:
+            list: alrets name
+
+        """
+        new_prom = PrometheusAPI()
+
+        alert_full = new_prom.get("alerts")
+        alerts_data = alert_full.json().get("data").get("alerts")
+        alerts_names = list()
+        for entity in alerts_data:
+            logger.debug(entity.get("labels").get("alertname"))
+            alerts_names.append(entity.get("labels").get("alertname"))
+
+        return alerts_names
+
+    def check_for_alert(self, alert_name):
+        """
+        Check to see if a given alert is available
+
+        Args:
+            alert_name (str): Alert name
+
+        Returns:
+            bool: True if alert is available else False
+
+        """
+        if alert_name in self.get_thin_provisioning_alerts():
+
+            return True
+
+        return False
+
+    def parse_topolvm_metrics(self, metrics):
+        """
+        Returns the name and value of topolvm metrics
+
+        Args:
+            metric_name (list): metrics name to be paesed
+
+        Returns:
+            dict: topolvm metrics by: names: value
+        """
+        new_prom = PrometheusAPI()
+        metrics_short = dict()
+
+        for metric_name in metrics:
+            metric_full = new_prom.query(metric_name)
+            metric_value = metric_full[0].get("value")[1]
+            logger.info(f"{metric_name} : {metric_value}")
+            metrics_short[metric_name] = metric_value
+
+        return metrics_short
+
+    def validate_thin_pool_data_percent_metric(self):
+        os_data_precent = self.get_thin_pool1_data_percent()
+        thinpool_data_metric = self.parse_topolvm_metrics(
+            constants.TOPOLVM_METRICS
+        ).get("topolvm_thinpool_data_percent")
+        if abs(float(thinpool_data_metric) - float(os_data_precent)) < 0.5:
+            return True
+        else:
+            logger.info(
+                f"thinpool data precentage metric {thinpool_data_metric} is different than"
+                f"{os_data_precent} that reported by node os"
+            )
+            return False
 
 
 def check_clusters():
